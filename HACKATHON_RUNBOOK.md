@@ -11,7 +11,7 @@ PLAN + CONTRACTS
     ↓
 PARALLEL BUILD (disjoint paths only)
     ↓
-PRIMARY AGENT INTEGRATION
+COORDINATOR INTEGRATION
     ↓
 RUN + TEST + BROWSER VERIFY
     ↓
@@ -52,7 +52,7 @@ DEMO FREEZE → 3 REHEARSALS → SHIP
 
 - Frontend와 Backend가 독립적일 때만 동시에 쓴다.
 - 공용 타입/스키마를 먼저 확정하고 한 명만 수정한다.
-- 루트 설정, lockfile, 배포 설정은 primary agent가 통합 시 다룬다.
+- 루트 설정, lockfile, 배포 설정은 Coordinator가 통합 시 다룬다.
 - 각 agent는 자신의 좁은 검증을 실행하고 결과를 반환한다.
 
 15–20분마다 확인할 질문:
@@ -65,7 +65,7 @@ DEMO FREEZE → 3 REHEARSALS → SHIP
 
 ## Phase 3 — 통합과 검증 (60–80%)
 
-Primary agent가 변경을 통합한 뒤 `prompts/30-review-loop.md`를 실행한다.
+Coordinator가 변경을 통합한 뒤 `prompts/30-review-loop.md`를 실행한다.
 
 검증 순서:
 
@@ -102,7 +102,7 @@ actual failure → one hypothesis → smallest fix → rerun failed check
 | 상황 | 기본 결정 |
 | --- | --- |
 | P0 버그가 30분 이상 지속 | 범위를 줄이거나 fixture fallback 사용 |
-| Frontend/Backend 계약 충돌 | primary agent가 계약을 고정하고 양쪽 수정 순서를 직렬화 |
+| Frontend/Backend 계약 충돌 | Coordinator가 계약을 고정하고 양쪽 수정 순서를 직렬화 |
 | 외부 API 불안정 | 캐시된 실제 형식의 응답으로 데모하고 연동 코드는 유지 |
 | 배포만 실패 | localhost 데모로 즉시 전환 |
 | 시간이 20% 미만 | 새 기능 중단, P0/P1과 대본만 수정 |
@@ -110,7 +110,7 @@ actual failure → one hypothesis → smallest fix → rerun failed check
 
 ## 사람의 역할
 
-Codex가 코드를 쓰는 동안 사람은 다음을 소유한다.
+AI 에이전트가 코드를 쓰는 동안 사람은 다음을 소유한다.
 
 - 문제와 데모 이야기가 설득력 있는지 판단
 - 범위 삭제 결정
@@ -118,4 +118,3 @@ Codex가 코드를 쓰는 동안 사람은 다음을 소유한다.
 - 실제 화면을 보고 맛과 우선순위 판단
 - 에이전트의 완료 보고가 아니라 실행 결과 확인
 - 마지막 발표와 fallback 전환
-

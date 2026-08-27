@@ -26,4 +26,5 @@ venv/
 *.log
 .cache/
 tmp/
-
+CLAUDE.local.md
+.claude/settings.local.json

@@ -1,4 +1,6 @@
-# Hackathon operating instructions
+# Universal agent operating instructions
+
+These instructions are vendor-neutral. Apply them whether the current runtime is a coding CLI, IDE agent, hosted agent, terminal agent, or a manually coordinated set of chat sessions.
 
 ## Source of truth
 
@@ -29,10 +31,20 @@
 ## Planning and ownership
 
 - Every implementation task must have: one owner, explicit owned paths, dependencies, and an observable done condition in `PLAN.md`.
-- Only delegate work in parallel when the user asks for parallel agents or a kickoff prompt explicitly requests them.
-- Parallel write agents must own disjoint paths. Shared contracts are agreed first; shared configuration, lockfiles, and integration files stay with the primary agent unless explicitly assigned.
-- Use read-only parallel agents freely for exploration, test analysis, and review when explicitly requested.
-- The primary agent waits for delegated work, integrates it, runs repository-wide checks, and owns the final result.
+- At the start of an orchestrated run, identify the available execution mode: native delegation, parallel sessions/worktrees, or sequential fallback.
+- Only run work in parallel when the user or an invoked workflow requests it and the work is genuinely independent.
+- Parallel write agents or sessions must own disjoint paths. Shared contracts are agreed first; shared configuration, lockfiles, and integration files stay with the coordinator unless explicitly assigned.
+- Use isolated read-only contexts for exploration, test analysis, and review when the runtime supports them.
+- If the runtime has no subagents, execute the same roles sequentially and start Reviewer in a fresh context when possible.
+- The coordinator waits for all assigned work, integrates it, runs repository-wide checks, and owns the final result.
+
+## Portable role contract
+
+- Canonical role definitions live in `.agents/agents/`.
+- A product-specific adapter may point to a canonical role but must not redefine its behavior.
+- When a named role is unavailable natively, read the matching role file and perform that role directly.
+- Do not depend on a product-specific agent name in `SPEC.md`, `PLAN.md`, or acceptance criteria.
+- Roles exchange self-contained handoffs: task, changed files, evidence, assumptions, risks, and next action.
 
 ## Implementation loop
 
@@ -74,4 +86,3 @@ When the final 20% of the event begins:
 - Run the complete demo three times from a clean start.
 - Verify the fallback path in `SPEC.md` and update `DEMO.md`.
 - Preserve the last known-good version before risky fixes.
-

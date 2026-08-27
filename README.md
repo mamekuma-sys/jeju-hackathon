@@ -1,14 +1,28 @@
-# Codex Hackathon Kit
+# Universal AI Agent Hackathon Kit
 
-하루짜리 해커톤에서 Codex를 `기획 → 병렬 구현 → 검증 → 데모 고정` 순서로 운영하기 위한 최소 구성입니다.
+하루짜리 해커톤에서 어떤 AI 코딩 에이전트를 사용하든 `기획 → 분업 → 통합 → 독립 검증 → 데모 고정` 순서로 운영하기 위한 공급자 중립 키트입니다.
+
+CLI, IDE, 호스팅형 에이전트, 터미널 에이전트, 멀티에이전트 오케스트레이터 등 제품과 실행 환경이 달라도 핵심 문서와 프롬프트는 그대로 사용합니다. 특정 도구의 네이티브 기능은 편의 기능일 뿐 필수 조건이 아닙니다. 구체적인 연결 예시는 [`AGENT_COMPATIBILITY.md`](AGENT_COMPATIBILITY.md)에만 격리했습니다.
 
 ## 10분 시작 순서
 
-1. [`SPEC.md`](SPEC.md)의 `TODO`를 팀과 함께 채운다.
+1. [`SPEC.md`](SPEC.md)의 제품·데모 관련 `TODO`를 채운다.
 2. 실제 프로젝트의 실행·검증 명령을 `SPEC.md`에 적는다.
-3. Codex에서 [`prompts/00-kickoff.md`](prompts/00-kickoff.md)를 그대로 붙여 넣는다.
+3. 사용 중인 에이전트에서 [`prompts/00-kickoff.md`](prompts/00-kickoff.md)를 붙여 넣는다.
 4. 생성된 계획을 확인하고 `GO`라고 답해 구현을 시작한다.
-5. 첫 번째 수직 슬라이스가 동작하면 범위를 잠그고 [`HACKATHON_RUNBOOK.md`](HACKATHON_RUNBOOK.md)의 루프를 따른다.
+5. 첫 번째 수직 슬라이스가 동작하면 범위를 잠그고 [`HACKATHON_RUNBOOK.md`](HACKATHON_RUNBOOK.md)를 따른다.
+
+## 세 가지 실행 모드
+
+현재 도구가 지원하는 가장 높은 모드를 사용합니다.
+
+| 모드 | 사용 조건 | 운영 방법 |
+| --- | --- | --- |
+| Native delegation | 하위 에이전트/Agent Team/Swarm 지원 | 역할별 에이전트를 호출하고 주 에이전트가 결과를 통합 |
+| Parallel sessions | 여러 작업·터미널·Worktree 지원 | 세션마다 역할 프롬프트와 독립 경로를 할당 |
+| Sequential fallback | 단일 에이전트만 지원 | Planner → Builder → Reviewer 역할을 새 컨텍스트로 순차 실행 |
+
+병렬 기능이 없다고 품질이 낮아지는 것은 아닙니다. 역할 분리, 소유 경로, 실제 검증, 독립 리뷰가 유지되면 같은 운영 모델입니다.
 
 ## 파일 지도
 
@@ -16,16 +30,20 @@
 | --- | --- |
 | `SPEC.md` | 제품 범위, 90초 데모, 완료 조건의 단일 기준점 |
 | `PLAN.md` | 작업 소유권, 의존성, 검증 증거를 기록하는 실행 보드 |
-| `AGENTS.md` | 이 저장소에서 모든 Codex 작업에 적용되는 규칙 |
+| `AGENTS.md` | 여러 도구가 공유하는 최상위 프로젝트 규칙 |
+| `.agents/agents/*.md` | 공급자 중립 Planner, Frontend, Backend, Reviewer 역할 원본 |
+| `prompts/*.md` | 어떤 에이전트 채팅에도 붙여 넣을 수 있는 단계별 명령 |
+| `AGENT_COMPATIBILITY.md` | 도구별 자동 로딩 파일과 수동 사용법 |
+| `CLAUDE.md`, `GEMINI.md` 등 | 공통 규칙으로 연결하는 얇은 호환 어댑터 |
+| `.codex/`, `.claude/` | 네이티브 역할 호출을 위한 선택적 제품 어댑터 |
 | `DEMO.md` | 실제 발표 대본, 복구 경로, 데모 체크리스트 |
 | `HACKATHON_RUNBOOK.md` | 시간대별 운영 루프와 중단 규칙 |
-| `.codex/agents/*.toml` | Planner, Frontend, Backend, Reviewer 역할 정의 |
-| `prompts/*.md` | Codex에 그대로 붙여 넣는 단계별 명령 |
 
 ## 핵심 원칙
 
+- 제품 이름 대신 `역할 / 입력 / 출력 / 권한 / 완료 조건`으로 에이전트를 정의한다.
 - 문서보다 동작하는 수직 슬라이스를 우선한다.
-- 병렬 에이전트는 소유 파일이 겹치지 않을 때만 사용한다.
+- 병렬 쓰기는 파일 소유권이 겹치지 않을 때만 사용한다.
 - 완료 판단은 에이전트의 설명이 아니라 실행한 명령과 실제 데모 결과로 한다.
+- Builder와 Reviewer의 컨텍스트를 가능한 한 분리한다.
 - 전체 시간의 마지막 20%에는 새 기능을 추가하지 않는다.
-
