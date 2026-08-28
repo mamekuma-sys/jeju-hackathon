@@ -64,7 +64,7 @@ Push, deploy, publish, message, payment, destructive operation, account/permissi
 
 | 시각 | Task ID / idempotency key | 행동 | 정확한 대상 | 승인 근거 | 사전 상태 | 결과/원격 증거 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-28 09:53 KST | KIT-DEMO-CONTRACT-01 | 검증된 agent kit 변경 commit과 push | `https://github.com/mamekuma-sys/jeju-hackathon`의 `main` | 사용자가 “깃 커밋 푸시까지 전부 진행” 요청 | `HEAD`와 `origin/main` 모두 `85651a4`, ahead/behind `0/0` | PENDING — push 후 원격 상태 확인 |
+| 2026-08-28 09:53 KST | KIT-DEMO-CONTRACT-01 | 검증된 agent kit 변경 commit과 push | `https://github.com/mamekuma-sys/jeju-hackathon`의 `main` | 사용자가 “깃 커밋 푸시까지 전부 진행” 요청 | `HEAD`와 `origin/main` 모두 `85651a4`, ahead/behind `0/0` | SUCCESS — `9a30534`, `85651a4..9a30534 main -> main` |
 | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` |
 
 ## Blockers and handoff
