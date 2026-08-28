@@ -4,15 +4,18 @@
 
 ```text
 AGENTS.md                  공통 프로젝트 규칙
-SPEC.md                    제품/완료 계약
+SPEC.md                    Experience/Demo/누적 가치/완료 계약
 PLAN.md                    Coordinator-only 작업/소유권/증거
 RUNTIME_CONTRACT.md        입력/도구 결과/승인/재시도 계약
+QUALITY_REFLEXES.md         조건부 품질 반사 계약
 EVALS.md                   실행 구조 실패 평가
 .agents/agents/*.md        역할 계약
 prompts/*.md               실행 절차
 ```
 
 도구 전용 파일이 없어도 위 파일을 읽을 수 있는 에이전트라면 전체 워크플로를 실행할 수 있습니다.
+
+`QUALITY_REFLEXES.md`는 tool과 무관한 선택 계층이며, routine 작업에서는 로드하거나 추가 review call을 만들지 않습니다.
 
 ## 자동 로딩과 어댑터
 

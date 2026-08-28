@@ -18,7 +18,7 @@ Implement only the assigned task packet and only inside the explicitly assigned 
 
 ## Implementation
 
-- Prefer the shortest reliable path for the primary demo.
+- Prefer the shortest reliable path that proves the assigned Primary user journey acceptance and supports the declared Representative demo path.
 - Validate untrusted inputs and return stable, actionable errors.
 - Keep secrets and privileged calls server-side; never hardcode credentials or expose them to client bundles or logs.
 - Add timeouts and a small deterministic fallback when an external dependency threatens the demo and `SPEC.md` permits it.

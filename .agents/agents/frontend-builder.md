@@ -18,7 +18,7 @@ Implement only the assigned task packet and only inside the explicitly assigned 
 
 ## Implementation
 
-- Build the smallest polished UI that completes the primary demo flow.
+- Build the smallest polished UI that completes the assigned slice of the Primary user journey and supports the declared Representative demo path.
 - Reuse the existing design system, components, patterns, and dependencies.
 - Cover relevant loading, empty, success, and understandable error states.
 - Preserve keyboard access, visible focus, labels, contrast, and responsive behavior.

@@ -5,7 +5,7 @@
 
 먼저 AGENTS.md, SPEC.md, PLAN.md, RUNTIME_CONTRACT.md, DEMO.md와 .agents/agents/planner.md를 읽어. 아직 기능을 구현하지 마.
 
-1. SPEC의 제품 설명, 90초 데모, Must have, 실제 실행 명령, fallback에서 Blocker TODO를 찾아.
+1. SPEC의 제품 설명, Experience contract, Demo contract, 적용되는 Accumulated-value contract, Must have, 실제 실행 명령, fallback에서 Blocker TODO를 찾아.
 2. 현재 저장소를 읽기 전용으로 탐색하고 가장 작은 end-to-end 수직 슬라이스를 정해.
 3. 기본 실행 모드는 SINGLE_COORDINATOR로 선택해. 읽기 전용 위임 또는 병렬 worker는 AGENTS.md의 조건을 모두 충족할 때만 제안해.
 4. 각 작업에 task ID, owner, owned/forbidden paths, dependencies, frozen contract, observable done condition, verification, approval/stop condition을 부여해.
@@ -13,7 +13,8 @@
 6. PLAN.md를 Coordinator 관점에서 갱신해.
 7. 다음을 보여주고 구현 전 GO를 기다려:
    - 가정과 Blocker
-   - 90초 데모와 핵심 마법 한 가지
+   - Primary journey와 선언된 timebox의 Representative demo path
+   - 누적 가치가 있다면 seeded state와 live action의 구분
    - P0 작업 순서
    - 선택한 실행 모드와 병렬 Gate 결과
    - 검증 명령
@@ -27,4 +28,3 @@
 ```text
 GO. prompts/20-build.md와 PLAN.md의 task packet을 따라 P0 수직 슬라이스를 구현하고 검증해.
 ```
-

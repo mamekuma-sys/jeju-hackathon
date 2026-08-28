@@ -9,6 +9,7 @@
 - 실행 모드: `SINGLE_COORDINATOR`
 - 현재 상태: `NOT STARTED`
 - Coordinator: `[TODO]`
+- Demo timebox: `[SPEC에서 복사]`
 - 데모 프리즈 시각: `[TODO]`
 - 남은 시간: `[TODO]`
 
@@ -27,7 +28,7 @@ Allowed run states: `NOT STARTED`, `IN PROGRESS`, `VERIFYING`, `BLOCKED`, `DONE`
 | T-01 | P0 | Coordinator | TODO | 0 | - | `SPEC.md`, `PLAN.md` | application code | SPEC의 Blocker TODO와 실행 명령 확정 |
 | T-02 | P0 | Coordinator | TODO | 0 | T-01 | `[SPEC에서 복사]` | unrelated/shared paths | 가장 작은 수직 슬라이스가 로컬에서 동작 |
 | T-03 | P0 | Optional Worker | TODO | 0 | frozen contract | `[독립 경로가 있을 때만]` | shared/config/lockfile | 할당된 독립 작업과 좁은 검증 완료 |
-| T-04 | P0 | Coordinator | TODO | 0 | T-02, T-03 | shared/config/integration | - | 90초 경로 end-to-end 성공 |
+| T-04 | P0 | Coordinator | TODO | 0 | T-02, T-03 | shared/config/integration | - | Primary journey와 선언된 Representative demo path end-to-end 성공 |
 | T-05 | P0 | Reviewer | TODO | 0 | T-04 evidence | read-only | all writes | P0/P1 근거 기반 보고서 반환 |
 | T-06 | P0 | Coordinator | TODO | 0 | T-05 | issue-specific | unrelated paths | 확인된 P0/P1 0개와 회귀 검증 |
 
@@ -63,6 +64,7 @@ Push, deploy, publish, message, payment, destructive operation, account/permissi
 
 | 시각 | Task ID / idempotency key | 행동 | 정확한 대상 | 승인 근거 | 사전 상태 | 결과/원격 증거 |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-28 09:53 KST | KIT-DEMO-CONTRACT-01 | 검증된 agent kit 변경 commit과 push | `https://github.com/mamekuma-sys/jeju-hackathon`의 `main` | 사용자가 “깃 커밋 푸시까지 전부 진행” 요청 | `HEAD`와 `origin/main` 모두 `85651a4`, ahead/behind `0/0` | PENDING — push 후 원격 상태 확인 |
 | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` | `[TODO]` |
 
 ## Blockers and handoff

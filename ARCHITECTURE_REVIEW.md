@@ -4,7 +4,7 @@
 
 - **가정:** 제품 설명과 기술 스택이 아직 비어 있어, 이번 리뷰의 대상은 제품 코드가 아니라 이 저장소의 해커톤 에이전트 운영 뼈대다.
 - **가정:** 개발 기간은 1일, 여러 AI 코딩 도구를 쓸 수 있지만 특정 제품의 native sub-agent 기능은 보장되지 않는다.
-- **진짜 목표:** 어떤 코딩 에이전트를 쓰더라도 90초 데모의 가장 작은 수직 슬라이스를 안전하고 재현 가능하게 완성한다.
+- **진짜 목표:** 어떤 코딩 에이전트를 쓰더라도 Primary user journey의 가장 작은 수직 슬라이스와 선언된 Demo contract를 안전하고 재현 가능하게 완성한다.
 - **핵심 작업:** SPEC을 고정하고 한 Coordinator가 구현·검증하며, 필요할 때만 경로가 분리된 worker 또는 읽기 전용 reviewer를 쓴다.
 - **반드시 성공할 흐름:** 사용자 요청 → 범위/승인 확인 → 구현 → 실제 결과 의미 검증 → 3회 데모 → 증거 기반 완료 보고다.
 - **실패하면 안 되는 행동:** 미승인 push/deploy/결제/발송, 비밀 노출, prompt injection 추종, timeout 후 중복 외부 실행, 미실행 테스트의 통과 선언이다.
@@ -55,7 +55,7 @@
 
 #### Karpathy-inspired 렌즈
 
-- **잘된 점:** 90초 경로, Must/Nice/Out-of-scope, 마지막 20% freeze는 빠른 학습 루프에 맞는다.
+- **잘된 점:** 대표 데모 경로, Must/Nice/Out-of-scope, 마지막 20% freeze는 빠른 학습 루프에 맞는다.
 - **위험한 점:** 역할·adapter 수가 실제 제품 피드백보다 먼저 늘었고, 검증 가능한 baseline 없이 orchestration이 중심이 됐다.
 - **반드시 삭제:** 의미 없는 reflection, agent 간 반복 합의, 독립적이지 않은 병렬화.
 - **반드시 추가:** 단일 Coordinator baseline, 10개 실패 fixture, 10분 안에 재현 가능한 구조 검사.
@@ -71,7 +71,7 @@
 
 - **심각도:** Blocker
 - **위치:** `SPEC.md`, `DEMO.md`, `PLAN.md`
-- **문제:** 제품, 90초 경로, 스택, 실제 Commands가 `[TODO]`다.
+- **문제:** 제품, Experience/Demo contract, 스택, 실제 Commands가 `[TODO]`다.
 - **실제로 발생할 실패:** 에이전트가 서로 다른 제품을 추측하거나 검증 없이 “완료”하고 데모를 재현하지 못한다.
 - **최소 수정안:** 구현 전에 SPEC의 Blocker TODO와 해당 Commands를 실제 값 또는 `N/A`로 고정한다.
 - **이를 검증할 테스트:** `python3 scripts/check-agent-kit.py --strict`가 통과하고 E-01을 3회 수행한다.
@@ -161,7 +161,7 @@
 
 | 분류 | 구성 요소 | 결정 |
 | --- | --- | --- |
-| KEEP | SPEC의 90초 경로, Must/Nice/Out-of-scope, Definition of Done | 제품 의도와 데모 판정의 단일 기준으로 유지 |
+| KEEP | SPEC의 Experience/Demo contract, Must/Nice/Out-of-scope, Definition of Done | 제품 의도와 데모 판정의 단일 기준으로 유지 |
 | KEEP | demo freeze와 P0/P1 심각도 | 마지막 구간의 회귀 위험을 줄임 |
 | SIMPLIFY | Planner/Frontend/Backend/Reviewer | 상시 프로세스가 아닌 필요 시 적용하는 역할로 축소 |
 | SIMPLIFY | PLAN | Coordinator 단일 writer의 task/evidence/failure/approval ledger만 유지 |
@@ -214,7 +214,7 @@ User Request
 ```text
 .
 ├── AGENTS.md                    # 모든 실행기의 공통 시스템 계약
-├── SPEC.md                      # 제품 범위·90초 경로·명령·Done
+├── SPEC.md                      # 제품 범위·Experience/Demo contract·명령·Done
 ├── PLAN.md                      # Coordinator-only 실행 상태와 ledger
 ├── RUNTIME_CONTRACT.md          # Task/evidence/state/retry 계약
 ├── EVALS.md                     # 반복 가능한 10개 실패 평가
@@ -286,7 +286,7 @@ User Request
 
 #### 지금 당장 구현
 
-1. `SPEC.md`의 One-liner, 90초 경로, Must have, 소유 경로, Commands, fallback을 실제 값으로 채운다.
+1. `SPEC.md`의 One-liner, Experience/Demo contract, 적용되는 Accumulated-value contract, Must have, 소유 경로, Commands, fallback을 실제 값으로 채운다.
 2. `PLAN.md`에 Run ID·프리즈 시각·첫 수직 slice Task packet을 기록한다.
 3. 단일 Coordinator로 E-01을 구현하고 제품별 schema/semantic validator와 fallback fixture를 평범한 코드로 만든다.
 4. `python3 scripts/check-agent-kit.py --strict`와 실제 smoke를 통과시킨다.
@@ -295,7 +295,7 @@ User Request
 
 - 위험도가 높은 E-02~E-10 fixture를 실행하고 P0 평가 실패만 수정한다.
 - read-only reviewer로 evidence와 데모 P0/P1을 한 번 검토한다.
-- clean start에서 90초 경로 3회, 네트워크/API 실패 fallback 1회를 수행한다.
+- clean start에서 선언된 Demo timebox의 대표 경로 3회, 네트워크/API 실패 fallback 1회를 수행한다.
 
 #### 해커톤 이후 구현
 
@@ -303,4 +303,4 @@ User Request
 - 같은 종류의 외부 작업이 반복될 때 제품 코드에 영속 idempotency store를 구현한다.
 - 역할 adapter drift가 실제 유지보수 문제가 될 때 generator를 만든다.
 
-**가장 중요한 다음 행동 하나:** `SPEC.md`의 90초 데모 성공 문장과 Commands를 실제 값으로 채운 뒤 `python3 scripts/check-agent-kit.py --strict`를 실행한다.
+**가장 중요한 다음 행동 하나:** `SPEC.md`의 Primary journey, Demo timebox와 성공 문장, Commands를 실제 값으로 채운 뒤 `python3 scripts/check-agent-kit.py --strict`를 실행한다.

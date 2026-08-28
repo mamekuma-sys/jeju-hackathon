@@ -20,19 +20,19 @@ Planner, Frontend Builder, Backend Builder, Reviewer는 항상 실행되는 네 
 
 ## Phase 0 — 준비 (0–10%)
 
-1. `SPEC.md`의 제품·데모·명령 TODO를 채운다.
-2. 90초 데모에서 보여줄 핵심 마법 한 가지를 정한다.
+1. `SPEC.md`의 제품, Experience contract, Demo contract, 적용되는 Accumulated-value contract와 명령 TODO를 채운다.
+2. 행사 규정에 맞는 Demo timebox와 그 안에서 증명할 Core proof를 정한다.
 3. Must have를 최대 3–5개로 제한한다.
-4. 외부 API fixture/mock fallback을 정한다.
+4. 누적 가치가 있는 제품은 seeded state와 발표 중 live action을 구분하고, 외부 API fixture/mock fallback을 정한다.
 5. `python3 scripts/check-agent-kit.py --strict`와 프로젝트의 install/dev 명령을 실행한다.
 
-종료 조건: 데모 성공 문장, P0 범위, 실제 실행 명령, fallback이 모두 존재한다.
+종료 조건: Primary journey, 대표 데모 성공 문장과 timebox, P0 범위, 실제 실행 명령, fallback이 모두 존재한다.
 
 ## Phase 1 — 계획 (10–15%)
 
 `prompts/10-plan.md`를 실행한다. 기본 출력은 Single Coordinator 계획이다.
 
-- 첫 작업이 end-to-end 수직 슬라이스인가?
+- 첫 작업이 Primary journey의 Core proof를 만드는 end-to-end 수직 슬라이스인가?
 - 계약과 소유 경로가 관찰 가능하게 정의됐는가?
 - 외부 변경 또는 위험 작업의 승인 조건이 적혔는가?
 - Nice to have가 임계 경로에 섞이지 않았는가?
@@ -64,7 +64,7 @@ Planner, Frontend Builder, Backend Builder, Reviewer는 항상 실행되는 네 
 
 15–20분마다 확인한다.
 
-1. 데모 경로가 실제로 더 많이 동작하는가?
+1. Primary journey와 대표 데모 경로가 실제로 더 많이 동작하는가?
 2. 가장 큰 막힘은 코드, 결정, 권한, 외부 의존성 중 무엇인가?
 3. 기능 하나를 버리면 데모 성공률이 높아지는가?
 
@@ -80,9 +80,10 @@ Coordinator가 `SPEC.md`의 명령과 브라우저 흐름을 실행하고 증거
 2. lint/typecheck/unit test
 3. production build
 4. 핵심 API smoke test
-5. 브라우저 90초 경로
-6. loading/empty/error/fallback
-7. Reviewer의 SPEC 대조 검사
+5. 브라우저 Primary journey
+6. 선언된 timebox의 Representative demo path
+7. loading/empty/error/fallback과 적용되는 supporting/other-actor/return journey
+8. Reviewer의 SPEC 대조 검사
 
 실패 처리:
 
@@ -104,7 +105,7 @@ classify failure
 `prompts/40-demo-freeze.md`를 실행한다.
 
 - 새 기능·의존성·대형 리팩터링 금지
-- clean start에서 데모 3회 연속 실행
+- clean start에서 선언된 Demo timebox 안에 대표 데모 3회 연속 실행
 - API 및 배포 fallback 각각 1회 실행
 - 마지막 known-good commit 기록
 - 발표자와 복구 담당자 지정

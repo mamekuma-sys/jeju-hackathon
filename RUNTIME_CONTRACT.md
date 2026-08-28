@@ -69,7 +69,7 @@ failure_class: TRANSIENT|DETERMINISTIC|INVALID_RESULT|PERMISSION|UNKNOWN|N/A
 
 | 상태 | 소유자 | 저장 위치 | 규칙 |
 | --- | --- | --- | --- |
-| 제품 범위와 Done | 사용자/Coordinator | `SPEC.md` | 방향 변경은 코드보다 먼저 반영 |
+| 제품 범위, Experience/Demo contract와 Done | 사용자/Coordinator | `SPEC.md` | 방향 변경은 코드보다 먼저 반영 |
 | 실행 상태와 결정 | Coordinator | `PLAN.md` | 단일 writer; worker/reviewer는 handoff만 반환 |
 | 작업 중 상세 로그 | 현재 실행자 | 세션/도구 출력 | 필요한 증거만 `PLAN.md`에 요약 |
 | 외부 효과의 진실 | 외부 시스템 | 원격 상태/API | 모호한 결과는 원격 조회 후 판정 |
@@ -129,10 +129,15 @@ while attempts < 3 and before_stop_condition:
     change_one_hypothesis_or_stop(failure)
 
 integrate_if_needed()
-run_broader_checks_from_SPEC()
-independent_read_only_review_when_risk_justifies_it()
-return completion_only_with_fresh_evidence_or_NOT_VERIFIED()
+deterministic_checks()
+route_applicable_quality_reflexes_once()
+apply_or_defer_findings()
+rerun_only_affected_checks()
+complete_with_fresh_evidence()
+return completion_or_NOT_VERIFIED()
 ```
+
+`route_applicable_quality_reflexes_once()`는 [`QUALITY_REFLEXES.md`](QUALITY_REFLEXES.md)의 trigger가 evidence로 확인된 항목만 고른다. routine 구현은 추가 model-review call 없이 결정적 검사 뒤 바로 완료 판정으로 진행한다.
 
 ## 8. 로깅 포인트
 

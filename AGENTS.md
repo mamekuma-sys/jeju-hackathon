@@ -5,7 +5,7 @@ These instructions are vendor-neutral. Prefer the smallest execution structure t
 ## 1. Source of truth
 
 1. Read `SPEC.md`, `PLAN.md`, and `RUNTIME_CONTRACT.md` before changing code.
-2. Treat the 90-second demo path and `Definition of Done` in `SPEC.md` as the acceptance contract.
+2. Treat the Experience contract, declared Demo contract, applicable Accumulated-value contract, and `Definition of Done` in `SPEC.md` as the acceptance contract.
 3. `PLAN.md` is the run state. Only the Coordinator edits it; workers and reviewers return self-contained handoffs.
 4. Record material scope, contract, approval, and architecture decisions in `PLAN.md`.
 5. A review or explanation request authorizes inspection, not implementation. A change request authorizes scoped local edits and relevant verification.
@@ -60,7 +60,7 @@ For each task:
 3. Run the narrowest relevant check.
 4. Validate the tool result using the evidence contract in `RUNTIME_CONTRACT.md`.
 5. Integrate and run broader checks from `SPEC.md`.
-6. Exercise the actual demo path for UI or integration behavior.
+6. Exercise the Primary user journey and the declared Representative demo path for UI or integration behavior.
 7. Return a self-contained handoff; the Coordinator updates `PLAN.md`.
 
 Do not add dependencies, abstractions, memory systems, agents, or orchestration steps unless they solve a named failure mode.
@@ -81,6 +81,12 @@ Do not add dependencies, abstractions, memory systems, agents, or orchestration 
 - Mark a task `DONE` only when its observable acceptance criterion has matching evidence.
 - For web UI changes, verify the primary flow, loading, empty/error state, console/runtime errors, responsive breakage, and keyboard focus when tools permit.
 - Completion reports include changed files, commands/actions, pass/fail evidence, external effects, assumptions, and remaining risks.
+
+## Conditional quality reflexes
+
+- [`QUALITY_REFLEXES.md`](QUALITY_REFLEXES.md) is the canonical contract for conditional intent, cleanup, fresh-eyes, evaluation-independence, and adversarial-decision routing.
+- Do not load or run the whole reflex set on routine work; a normal implementation adds zero model-review calls.
+- Deterministic verification remains primary. Route only a reflex whose documented trigger is supported by evidence.
 
 ## 9. Review severity and freeze
 

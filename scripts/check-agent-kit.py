@@ -22,6 +22,7 @@ REQUIRED_FILES = (
     "SPEC.md",
     "PLAN.md",
     "RUNTIME_CONTRACT.md",
+    "QUALITY_REFLEXES.md",
     "EVALS.md",
     "ARCHITECTURE_REVIEW.md",
     "HACKATHON_RUNBOOK.md",
@@ -46,6 +47,31 @@ AGENT_MARKERS = (
     "Approval and external effects",
     "Retry and failure handling",
     "Verification and completion",
+)
+QUALITY_REFLEX_NAMES = (
+    "INTENT_CHECK",
+    "CLEAN_V0",
+    "FRESH_EYES",
+    "EVAL_INDEPENDENCE",
+    "ADVERSARIAL_DECISION",
+)
+QUALITY_REFLEX_REFERENCES = (
+    "AGENTS.md",
+    "prompts/20-build.md",
+    "prompts/30-review-loop.md",
+)
+PRODUCT_CONTRACT_MARKERS = (
+    "## 3. Experience contract",
+    "## 4. Demo contract",
+    "## 5. Accumulated-value contract",
+    "### Product Done",
+    "### Demo Ready",
+)
+DEMO_CONTRACT_MARKERS = (
+    "## Demo contract summary",
+    "## Live and seeded state",
+    "## Full-experience coverage",
+    "## Rehearsal log",
 )
 SKIP_LINK_PREFIXES = ("http://", "https://", "mailto:", "#", "data:")
 
@@ -216,6 +242,38 @@ def check_prompt_migration(report: Report) -> None:
         report.ok("single-coordinator build prompt replaced parallel-first prompt")
 
 
+def check_quality_reflexes(report: Report) -> None:
+    contract = read_text(ROOT / "QUALITY_REFLEXES.md", report)
+    missing_names = [name for name in QUALITY_REFLEX_NAMES if name not in contract]
+    if missing_names:
+        report.fail("QUALITY_REFLEXES.md missing canonical names: " + ", ".join(missing_names))
+    else:
+        report.ok(f"canonical quality reflex names present ({len(QUALITY_REFLEX_NAMES)})")
+
+    missing_references = [
+        name
+        for name in QUALITY_REFLEX_REFERENCES
+        if "QUALITY_REFLEXES.md" not in read_text(ROOT / name, report)
+    ]
+    if missing_references:
+        report.fail("missing QUALITY_REFLEXES.md references: " + ", ".join(missing_references))
+    else:
+        report.ok(f"quality reflex contract referenced ({len(QUALITY_REFLEX_REFERENCES)})")
+
+
+def check_product_contract_structure(report: Report) -> None:
+    spec = read_text(ROOT / "SPEC.md", report)
+    demo = read_text(ROOT / "DEMO.md", report)
+    missing_spec = [marker for marker in PRODUCT_CONTRACT_MARKERS if marker not in spec]
+    missing_demo = [marker for marker in DEMO_CONTRACT_MARKERS if marker not in demo]
+    if missing_spec:
+        report.fail("SPEC.md missing product contract markers: " + ", ".join(missing_spec))
+    if missing_demo:
+        report.fail("DEMO.md missing demo contract markers: " + ", ".join(missing_demo))
+    if not missing_spec and not missing_demo:
+        report.ok("experience, demo, and accumulated-value contracts are separated")
+
+
 def check_local_links(report: Report) -> None:
     link_pattern = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
     broken: list[str] = []
@@ -248,7 +306,16 @@ def check_local_links(report: Report) -> None:
 def check_placeholders(report: Report, strict: bool) -> None:
     spec = read_text(ROOT / "SPEC.md", report)
     todo_count = len(re.findall(r"\[TODO(?::[^\]]*)?\]", spec, flags=re.IGNORECASE))
-    command_section = spec.split("## 8. Commands", 1)[-1].split("## 9.", 1)[0]
+    command_match = re.search(
+        r"^## \d+\. Commands\s*$\n(.*?)(?=^## \d+\. |\Z)",
+        spec,
+        flags=re.IGNORECASE | re.MULTILINE | re.DOTALL,
+    )
+    if command_match is None:
+        report.fail("SPEC.md has no numbered Commands section")
+        command_section = ""
+    else:
+        command_section = command_match.group(1)
     command_todos = len(re.findall(r"\[TODO(?::[^\]]*)?\]", command_section, flags=re.IGNORECASE))
     if todo_count == 0 and command_todos == 0:
         report.ok("SPEC.md has no unresolved TODO placeholders")
@@ -275,6 +342,8 @@ def main() -> int:
     check_toml_adapters(report)
     check_agent_contract(report)
     check_prompt_migration(report)
+    check_quality_reflexes(report)
+    check_product_contract_structure(report)
     check_local_links(report)
     check_placeholders(report, args.strict)
     report.print()
