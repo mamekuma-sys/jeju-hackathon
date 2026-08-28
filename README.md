@@ -1,6 +1,6 @@
 # Universal AI Agent Hackathon Kit
 
-하루짜리 해커톤에서 어떤 AI 코딩 에이전트를 사용하든 `기획 → 분업 → 통합 → 독립 검증 → 데모 고정` 순서로 운영하기 위한 공급자 중립 키트입니다.
+하루짜리 해커톤에서 어떤 AI 코딩 에이전트를 사용하든 `기획 → 구현 → 검증 → 데모 고정` 순서로 운영하기 위한 공급자 중립 키트입니다. 분업은 독립 작업이 실제로 있을 때만 선택합니다.
 
 CLI, IDE, 호스팅형 에이전트, 터미널 에이전트, 멀티에이전트 오케스트레이터 등 제품과 실행 환경이 달라도 핵심 문서와 프롬프트는 그대로 사용합니다. 특정 도구의 네이티브 기능은 편의 기능일 뿐 필수 조건이 아닙니다. 구체적인 연결 예시는 [`AGENT_COMPATIBILITY.md`](AGENT_COMPATIBILITY.md)에만 격리했습니다.
 
@@ -14,15 +14,15 @@ CLI, IDE, 호스팅형 에이전트, 터미널 에이전트, 멀티에이전트 
 
 ## 세 가지 실행 모드
 
-현재 도구가 지원하는 가장 높은 모드를 사용합니다.
+현재 도구가 지원하는 가장 높은 모드가 아니라, 작업을 끝낼 수 있는 가장 단순한 모드를 사용합니다.
 
 | 모드 | 사용 조건 | 운영 방법 |
 | --- | --- | --- |
-| Native delegation | 하위 에이전트/Agent Team/Swarm 지원 | 역할별 에이전트를 호출하고 주 에이전트가 결과를 통합 |
-| Parallel sessions | 여러 작업·터미널·Worktree 지원 | 세션마다 역할 프롬프트와 독립 경로를 할당 |
-| Sequential fallback | 단일 에이전트만 지원 | Planner → Builder → Reviewer 역할을 새 컨텍스트로 순차 실행 |
+| Single Coordinator (기본값) | 대부분의 기능 구현 | 한 에이전트가 계획·구현·검증하고 필요할 때만 역할 전환 |
+| Read-only delegation | 탐색/리뷰 출력이 메인 컨텍스트를 오염시킴 | Planner 또는 Reviewer만 별도 읽기 전용 컨텍스트 사용 |
+| Parallel workers | 독립 P0/P1 작업, 고정 계약, 비중첩 경로가 모두 충족 | 세션/Worktree마다 하나의 task packet을 할당하고 Coordinator가 통합 |
 
-병렬 기능이 없다고 품질이 낮아지는 것은 아닙니다. 역할 분리, 소유 경로, 실제 검증, 독립 리뷰가 유지되면 같은 운영 모델입니다.
+멀티에이전트는 기본 아키텍처가 아니라 지연시간 최적화입니다. 병렬 조건이 하나라도 불충분하면 Single Coordinator로 실행합니다.
 
 ## 파일 지도
 
@@ -31,6 +31,9 @@ CLI, IDE, 호스팅형 에이전트, 터미널 에이전트, 멀티에이전트 
 | `SPEC.md` | 제품 범위, 90초 데모, 완료 조건의 단일 기준점 |
 | `PLAN.md` | 작업 소유권, 의존성, 검증 증거를 기록하는 실행 보드 |
 | `AGENTS.md` | 여러 도구가 공유하는 최상위 프로젝트 규칙 |
+| `RUNTIME_CONTRACT.md` | 입력·상태·도구 결과·승인·재시도 계약 |
+| `EVALS.md` | 해커톤 중 반복 실행할 최소 실패 시나리오 |
+| `ARCHITECTURE_REVIEW.md` | 현재 구조의 A–J 리뷰와 수정 근거 |
 | `.agents/agents/*.md` | 공급자 중립 Planner, Frontend, Backend, Reviewer 역할 원본 |
 | `prompts/*.md` | 어떤 에이전트 채팅에도 붙여 넣을 수 있는 단계별 명령 |
 | `AGENT_COMPATIBILITY.md` | 도구별 자동 로딩 파일과 수동 사용법 |
@@ -46,4 +49,17 @@ CLI, IDE, 호스팅형 에이전트, 터미널 에이전트, 멀티에이전트 
 - 병렬 쓰기는 파일 소유권이 겹치지 않을 때만 사용한다.
 - 완료 판단은 에이전트의 설명이 아니라 실행한 명령과 실제 데모 결과로 한다.
 - Builder와 Reviewer의 컨텍스트를 가능한 한 분리한다.
+- `PLAN.md`는 Coordinator만 수정한다. 다른 역할은 구조화된 handoff만 반환한다.
 - 전체 시간의 마지막 20%에는 새 기능을 추가하지 않는다.
+
+## 구조 자체 검증
+
+```bash
+python3 scripts/check-agent-kit.py
+```
+
+`SPEC.md`의 모든 필수 입력까지 검사하려면 다음을 사용합니다.
+
+```bash
+python3 scripts/check-agent-kit.py --strict
+```

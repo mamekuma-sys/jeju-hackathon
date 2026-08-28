@@ -28,3 +28,5 @@ venv/
 tmp/
 CLAUDE.local.md
 .claude/settings.local.json
+.agent-runtime/
+*.agent-log.jsonl

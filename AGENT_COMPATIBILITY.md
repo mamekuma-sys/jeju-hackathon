@@ -5,7 +5,9 @@
 ```text
 AGENTS.md                  공통 프로젝트 규칙
 SPEC.md                    제품/완료 계약
-PLAN.md                    작업/소유권/증거
+PLAN.md                    Coordinator-only 작업/소유권/증거
+RUNTIME_CONTRACT.md        입력/도구 결과/승인/재시도 계약
+EVALS.md                   실행 구조 실패 평가
 .agents/agents/*.md        역할 계약
 prompts/*.md               실행 절차
 ```
@@ -30,7 +32,7 @@ prompts/*.md               실행 절차
 
 ## Capability Check
 
-Kickoff 전에 현재 도구에 다음을 확인합니다.
+Kickoff 전에 현재 도구에 다음을 확인합니다. 이 확인은 가장 복잡한 기능을 고르기 위한 것이 아니라, 단일 Coordinator로 부족할 때 사용할 수 있는 안전한 선택지를 파악하기 위한 것입니다.
 
 1. 저장소 파일을 읽고 수정할 수 있는가?
 2. shell/test/build/browser 중 무엇을 실행할 수 있는가?
@@ -39,12 +41,13 @@ Kickoff 전에 현재 도구에 다음을 확인합니다.
 5. 읽기 전용 Reviewer 컨텍스트를 만들 수 있는가?
 6. 승인, sandbox, 네트워크, 비밀값 제한은 무엇인가?
 
-대답에 따라 실행 모드를 선택합니다.
+기본값은 언제나 단일 Coordinator입니다. 대답과 `AGENTS.md`의 병렬 Gate에 따라 필요한 기능만 추가합니다.
 
 ```text
-native delegation 가능  → 역할을 네이티브 에이전트에 위임
-위임 불가, 다중 세션 가능 → 역할별 세션/Worktree 운영
-둘 다 불가              → 역할 파일을 순서대로 읽고 단일 세션 실행
+기본                         → 한 Coordinator가 역할을 순차 적용
+탐색/리뷰 격리가 필요함       → 읽기 전용 역할 하나만 위임
+병렬 Gate를 모두 통과함       → 비중첩 Task packet만 worker/세션/Worktree에 위임
+위임 기능이 없음              → 같은 역할 파일을 단일 세션에서 순차 적용
 ```
 
 ## 역할을 수동으로 실행하는 공통 문장
@@ -66,6 +69,6 @@ Acceptance criteria: <CRITERIA>
 - 모델이나 제품을 바꿔도 `SPEC.md`와 `PLAN.md`를 복사하지 않는다. 같은 파일을 기준으로 삼는다.
 - 제품 전용 메모리보다 저장소의 검증 가능한 사실을 우선한다.
 - 역할 이름이 달라도 Planner/Builder/Reviewer 계약을 유지한다.
+- native delegation이 가능하다는 이유만으로 역할을 분리하지 않는다.
 - 네이티브 병렬 기능이 없으면 동작을 생략하지 말고 순차 실행한다.
 - 도구가 완료했다고 말해도 실행 증거가 없으면 `NOT VERIFIED`다.
-
